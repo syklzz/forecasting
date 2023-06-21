@@ -1,8 +1,14 @@
 import requests
+import threading
 
 
-def send_request(request_data):
-    url = "http://localhost:8000"
+def send_request():
+    url = "http://localhost:8000/job"
+    request_data = [
+        {'iterations': 5, 'size': 100},
+        {'iterations': 2, 'size': 1000},
+        {'iterations': 3, 'size': 3000}
+    ]
 
     print(f'Request: {request_data}')
     response = requests.post(url, json=request_data)
@@ -12,5 +18,12 @@ def send_request(request_data):
 if __name__ == '__main__':
     print('Client started.')
 
-    data = {'iterations': 503406033}
-    send_request(data)
+    threads = []
+
+    for _ in range(5):
+        thread = threading.Thread(target=send_request)
+        thread.start()
+        threads.append(thread)
+
+    for thread in threads:
+        thread.join()

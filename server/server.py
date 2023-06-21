@@ -4,20 +4,13 @@ from docker_manager import DockerManager
 
 
 app = Flask(__name__)
-manager = DockerManager(5)
+manager = DockerManager()
 
 
-@app.route('/', methods=['POST'])
+@app.route('/job', methods=['POST'])
 def handle_client_request():
     data = request.get_json()
     return manager.handle_request(data)
-
-
-@app.route('/lambda', methods=['POST'])
-def handle_forecaster_request():
-    data = request.get_json()
-    manager.update_active_containers(data['active_containers'])
-    return 'Success'
 
 
 if __name__ == '__main__':

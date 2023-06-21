@@ -1,16 +1,13 @@
-import requests
+from flask import Flask
+import random
+
+app = Flask(__name__)
 
 
-def send_request(request_data):
-    url = "http://localhost:8000/lambda"
-
-    print(f'Request: {request_data}')
-    response = requests.post(url, json=request_data)
-    print(f'Response: {response.text}')
+@app.route('/predict/<container_id>', methods=['GET'])
+def handle_client_request(container_id):
+    return str(random.uniform(0.0001, 0.0002))
 
 
 if __name__ == '__main__':
-    print('Forecaster started.')
-
-    data = {'active_containers': 0}
-    send_request(data)
+    app.run(host='localhost', port=12345, threaded=True)
