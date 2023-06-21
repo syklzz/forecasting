@@ -3,13 +3,12 @@ import docker.errors
 import requests
 import threading
 import concurrent.futures
+import json
 
 
 class DockerManager:
     def __init__(self):
         self.client = docker.from_env()
-        self.max_cpu_usage = 0.05
-        self.min_cpu_usage = 0.02
         self.max_containers = 5
         self.active_containers = 3
         self.selected_container = 0
@@ -42,7 +41,7 @@ class DockerManager:
     def send_request_to_forecaster(self, container_id):
         container = self.client.containers.get(f'worker_{container_id}')
         url = self.forecaster_url.format(container.id)
-        return float(requests.get(url).text)
+        return float(json.loads(requests.post(url).text)[0][0][0])
 
     def get_future_cpu_usage(self, containers):
         result = []
